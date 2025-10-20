@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Bookmark, ChevronDownIcon, DownloadIcon, LinkIcon, Settings2, Share2Icon, XIcon } from 'lucide-react'
+import { Bookmark, ChevronDownIcon, ChevronLeft, DownloadIcon, LinkIcon, Settings2, Share2Icon, XIcon } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle } from '@/components/ui/drawer'
 import AdsCard from '@/components/AdsCard'
@@ -326,14 +326,21 @@ export default function ReadManga(props) {
               <div className="sticky top-0 bg-accent">
                 <div className="p-0 flex flex-col">
                   <div className='flex justify-between items-center gap-1'>
-                    <Button size="sm" variant="outline" onClick={()=>{
-                      setSelectedChapterId(oneChapter.id);
-                      setShowChaptersModal(!showChaptersModal);
-                    }}>
-                      {onApiCallSt && <LoadingSpinner />}
-                      Chapter - {oneChapter.number}
-                      <ChevronDownIcon size={14} />
-                    </Button>
+                    <div className='flex items-center gap-1'>
+                      <Button size="sm" variant="outline" onClick={()=>{
+                        router.back()
+                      }}>
+                        <ChevronLeft size={14} />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={()=>{
+                        setSelectedChapterId(oneChapter.id);
+                        setShowChaptersModal(!showChaptersModal);
+                      }}>
+                        {onApiCallSt && <LoadingSpinner />}
+                        Chapter - {oneChapter.number}
+                        <ChevronDownIcon size={14} />
+                      </Button>
+                    </div>
                     <div className='flex items-center gap-1'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

@@ -3,7 +3,6 @@ import {
   SidebarTrigger,
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarGroupContent,
@@ -20,6 +19,16 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import UserDropdown from "./UserDropdown"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+} from "@/components/ui/navigation-menu"
 
 const menuItems = [
   { title: "Home", url: "/home", icon: Home },
@@ -49,6 +58,9 @@ export function DefaultLayout({ children }) {
   const [showScrollTop, setShowScrollTop] = useState(false)
 
   useEffect(() => {
+    setOpen(false)
+    setOpenMobile(false)
+
     if (pathname && (pathname.includes("/watch/") || pathname.includes("/read/"))) {
       setShouldStick(false)
     } else {
@@ -140,10 +152,10 @@ export function DefaultLayout({ children }) {
                 {mangaItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={item.url == pathname}>
-                      <a href={item.url}>
+                      <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -157,10 +169,10 @@ export function DefaultLayout({ children }) {
                 {animeItems.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={item.url == pathname}>
-                      <a href={item.url}>
+                      <Link href={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -179,8 +191,8 @@ export function DefaultLayout({ children }) {
         >
           <div className="flex flex-row items-center">
             <SidebarTrigger />
-            <div className="ml-2 border-l border-accent h-10" />
-            <a href="/" className="mx-4">
+            <div className="mx-2 border-l border-accent h-10" />
+            <a href="/" className="mx-2 hover:bg-accent p-1">
               <div className="flex flex-row items-center gap-2">
                 <div className="flex aspect-square size-6 items-center justify-center rounded-lg">
                   <img src="/images/cover192.png" className="rounded-lg" />
@@ -190,13 +202,42 @@ export function DefaultLayout({ children }) {
                 </div>
               </div>
             </a>
-            <div className="ml-2 border-l border-accent h-10" />
+            <div className="mx-2 border-l border-accent h-10" />
             <Link href="/search"
               className="size-10 flex items-center justify-center hover:bg-accent rounded cursor-pointer">
               <SearchIcon size={20} />
             </Link>
+            <div className="mx-2 border-l border-accent h-10" />
+            <div className="hidden lg:flex flex-row justify-start items-center">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Manga</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <Link href="/latest"><NavigationMenuLink>Latest</NavigationMenuLink></Link>
+                      <Link href="/library"><NavigationMenuLink>Library</NavigationMenuLink></Link>
+                      <Link href="/history"><NavigationMenuLink>History</NavigationMenuLink></Link>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Anime</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <Link href="/anime/latest"><NavigationMenuLink>Latest</NavigationMenuLink></Link>
+                      <Link href="/anime/season"><NavigationMenuLink>Season</NavigationMenuLink></Link>
+                      <Link href="/anime/history"><NavigationMenuLink>History</NavigationMenuLink></Link>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
           </div>
-          <div className="flex flex-row items-center">
+          <div className="flex-1 hidden lg:flex flex-row justify-center items-center">
+          </div>
+          <div className="flex flex-row items-center justify-end">
             <div className="size-10 flex items-center justify-center hover:bg-accent rounded cursor-pointer">
               <UserDropdown />
             </div>
