@@ -1,11 +1,9 @@
-import { Download, LayoutDashboard, LogIn, LogInIcon, LogOut, Moon, Sun, UserIcon } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { Download, LogIn, LogInIcon, LogOut, UserIcon } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { useSidebar } from "../ui/sidebar";
 import { usePathname } from "next/navigation";
 
 var defaultUser = {
@@ -18,9 +16,7 @@ const ADM_EMS = [
 
 export default function UserDropdown() {
   const router = useRouter()
-  const { setTheme } = useTheme()
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const { isMobile } = useSidebar()
   const pathName = usePathname()
 
   const [user, setUser] = useState(defaultUser)
@@ -41,9 +37,9 @@ export default function UserDropdown() {
 
     deferredPrompt.userChoice.then((choiceResult) => {
       if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the A2HS prompt');
+        // console.log('User accepted the A2HS prompt');
       } else {
-        console.log('User dismissed the A2HS prompt');
+        // console.log('User dismissed the A2HS prompt');
       }
       setDeferredPrompt(null);
     });

@@ -1,4 +1,4 @@
-import { Book, BookMarked, History, Home, Play, Sun, ArrowUp, SearchIcon } from "lucide-react"
+import { Book, BookMarked, History, Home, Play, Sun, ArrowUp, SearchIcon, Circle } from "lucide-react"
 import {
   SidebarTrigger,
   Sidebar,
@@ -22,12 +22,10 @@ import UserDropdown from "./UserDropdown"
 import {
   NavigationMenu,
   NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu"
 
 const menuItems = [
@@ -46,8 +44,19 @@ const animeItems = [
   { title: "History", url: "/anime/history", icon: History },
 ]
 
+const adminItems = [
+  { title: "Affiliate Links", url: "/admin/affiliate_link", icon: Circle },
+  { title: "Manga Activity", url: "/admin/user_activity", icon: Circle },
+  { title: "Anime Activity", url: "/admin/user_anime_activity", icon: Circle },
+]
+
+const ADM_EMS = [
+  "umarkotak@gmail.com"
+]
+
 export function DefaultLayout({ children }) {
   const pathname = usePathname()
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const {
     setOpen,
@@ -56,6 +65,12 @@ export function DefaultLayout({ children }) {
   } = useSidebar()
   const [shouldStick, setShouldStick] = useState(true)
   const [showScrollTop, setShowScrollTop] = useState(false)
+
+  useEffect(() => {
+    if (!localStorage) return
+
+    setIsAdmin(ADM_EMS.includes(localStorage.getItem("ANIMAPU_LITE:USER:EMAIL")))
+  }, [pathname])
 
   useEffect(() => {
     setOpen(false)
@@ -72,7 +87,8 @@ export function DefaultLayout({ children }) {
     const handleScroll = () => {
       // Only show scroll to top button when shouldStick is false and scrolled > 300px
       if (!shouldStick && window.scrollY > 300) {
-        setShowScrollTop(true)
+        // ADJUST IF NEEDED
+        setShowScrollTop(false)
       } else {
         setShowScrollTop(false)
       }
@@ -179,6 +195,23 @@ export function DefaultLayout({ children }) {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
+          {isAdmin && <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={item.url == pathname}>
+                      <Link href={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>}
         </SidebarContent>
       </Sidebar>
 
@@ -214,9 +247,11 @@ export function DefaultLayout({ children }) {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>Manga</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <Link href="/latest"><NavigationMenuLink>Latest</NavigationMenuLink></Link>
-                      <Link href="/library"><NavigationMenuLink>Library</NavigationMenuLink></Link>
-                      <Link href="/history"><NavigationMenuLink>History</NavigationMenuLink></Link>
+                      {mangaItems.map((item) => (
+                        <Link href={item.url} key={item.url}>
+                          <NavigationMenuLink className="flex flex-row items-center gap-2 w-36"><item.icon size={16} />{item.title}</NavigationMenuLink>
+                        </Link>
+                      ))}
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
@@ -226,13 +261,29 @@ export function DefaultLayout({ children }) {
                   <NavigationMenuItem>
                     <NavigationMenuTrigger>Anime</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <Link href="/anime/latest"><NavigationMenuLink>Latest</NavigationMenuLink></Link>
-                      <Link href="/anime/season"><NavigationMenuLink>Season</NavigationMenuLink></Link>
-                      <Link href="/anime/history"><NavigationMenuLink>History</NavigationMenuLink></Link>
+                      {animeItems.map((item) => (
+                        <Link href={item.url} key={item.url}>
+                          <NavigationMenuLink className="flex flex-row items-center gap-2 w-36"><item.icon size={16} />{item.title}</NavigationMenuLink>
+                        </Link>
+                      ))}
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
+              {isAdmin && <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Admin</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      {adminItems.map((item) => (
+                        <Link href={item.url} key={item.url}>
+                          <NavigationMenuLink className="flex flex-row items-center gap-2 w-36"><item.icon size={16} />{item.title}</NavigationMenuLink>
+                        </Link>
+                      ))}
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>}
             </div>
           </div>
           <div className="flex-1 hidden lg:flex flex-row justify-center items-center">
